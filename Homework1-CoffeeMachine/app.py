@@ -5,27 +5,26 @@ import streamlit as st
 
 st.title(":coffee: Coffee Machine")
 
-# Makineyi oturum durumunda saklayın
+
 if 'machine' not in st.session_state:
-    st.session_state.machine = CoffeeMachine(100, 300, 200, 0)  # İlk değerlerle oluştur
+    st.session_state.machine = CoffeeMachine(100, 300, 200, 0)
 
 machine = st.session_state.machine
 paymentVisibility = False
 
-# Toggle butonunu oluştur
+
 machine_on = st.sidebar.toggle("Makineyi Aç", value=False)
 showReport = st.sidebar.toggle("Raporu Göster", value=False)
 
-# Raporu göster
+
 if showReport:
     st.sidebar.text(machine.report())
 else:
     st.sidebar.text("")
 
-# Placeholder'ları tanımla
 placeholderCoffee = None
 placeholderPayment = None
-payment_completed = False  # Ödeme durumunu izlemek için bayrak
+payment_completed = False
 
 if machine_on:
     tab1, tab2 = st.tabs(["Kahve Seçimi", "Ödeme"])
@@ -36,7 +35,6 @@ if machine_on:
 
         coffeeChoice = containerCoffee.radio("Kahve seçiminizi yapınız", ["Espresso $1.5", "Cappuccino $3", "Latte $2.5", "Special $3.5"], horizontal=True)
 
-        # Seçilen kahve türüne göre CoffeeRecipe nesnesi oluştur
         if coffeeChoice == "Espresso $1.5":
             coffee = CoffeeRecipe("Espresso", 18, 18, 0, 1.5)
         elif coffeeChoice == "Latte $2.5":
@@ -52,7 +50,7 @@ if machine_on:
     with tab2:
         containerPayment = st.container()
 
-        if not payment_completed:  # Eğer ödeme tamamlanmamışsa göster
+        if not payment_completed:
             placeholderPayment = containerPayment.empty()
             quarters = containerPayment.number_input("Insert a quarters", 0)
             dimes = containerPayment.number_input("Insert a dimes", 0)
@@ -64,16 +62,15 @@ if machine_on:
 
             if payment:
                 result = order.make_coffee(machine)
-                payment_completed = True  # Ödeme tamamlandı
-                containerPayment.empty()  # Ödeme alanını temizle
-                st.success(result)  # Sonucu kullanıcıya göster
-
+                payment_completed = True 
+                containerPayment.empty() 
+                st.success(result) 
 else:
-    # Makine kapalı olduğunda içerikleri temizle
+
     if placeholderPayment is not None:
-        placeholderPayment.empty()  # Ödeme alanını temizle
+        placeholderPayment.empty() 
     if placeholderCoffee is not None:
-        placeholderCoffee.empty()    # Kahve alanını temizle
+        placeholderCoffee.empty()
 
     # Makine kapandığında gösterilecek mesaj
     st.markdown("Makine kapalı. :zzz:")
